@@ -1,0 +1,11 @@
+TODOs
+
+==
+
+Ideas
+* Get it working
+
+
+Changelog
+0.1
+* Initial release (Supports syncing name, e-mails, URLs, phone numbers and picture)
