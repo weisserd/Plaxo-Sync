@@ -5,6 +5,9 @@ TODOs
 Ideas
 * Get it working
 
+Testclient
+* http://www.plaxo.com/pdata/testClient
+
 
 Changelog
 0.1
