@@ -271,7 +271,7 @@ public class Contact {
 					c.setHomeEmail(jsonMail.getString("value"));
 				}
 			}
-			
+
 			// URLs
 			JSONArray jsonURLArray = jsonObject.getJSONArray("urls");
 			for (int i = 0; i < jsonURLArray.length(); i++) {
@@ -282,7 +282,7 @@ public class Contact {
 					c.setHomeURL(jsonURL.getString("value"));
 				}
 			}
-			
+
 			// Phone numbers
 			JSONArray jsonPhoneArray = jsonObject.getJSONArray("phoneNumbers");
 			for (int i = 0; i < jsonPhoneArray.length(); i++) {
@@ -297,10 +297,26 @@ public class Contact {
 					c.setCellWorkPhone(jsonPhone.getString("value"));
 				}
 			}
-			
+
 			// TODO Company
-			
-			// TODO Adresses
+
+			JSONArray jsonAddressArray = jsonObject.getJSONArray("addresses");
+			for (int i = 0; i < jsonAddressArray.length(); i++) {
+				JSONObject jsonAddress = jsonAddressArray.getJSONObject(i);
+				Address a = new Address();
+				a.setStreet(jsonAddress.has("streetAddress") ? jsonAddress.getString("streetAddress") : "");
+				a.setCity(jsonAddress.has("locality") ? jsonAddress.getString("locality") : "");
+				a.setZip(jsonAddress.has("postalCode") ? jsonAddress.getString("postalCode") : "");
+				a.setState(jsonAddress.has("region") ? jsonAddress.getString("region") : "");
+				a.setCountry(jsonAddress.has("country") ? jsonAddress.getString("country") : "");
+				if (jsonAddress.has("type")) {
+					if (jsonAddress.getString("type").equals("work")) {
+						c.setWorkAddress(a);
+					} else if (jsonAddress.getString("type").equals("home")) {
+						c.setHomeAddress(a);
+					}
+				}
+			}
 		} catch (JSONException e) {
 			Log.e(TAG, "Problem on parsing JSON", e);
 		}

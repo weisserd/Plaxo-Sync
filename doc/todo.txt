@@ -3,12 +3,15 @@ TODOs
 ==
 
 Ideas
-* Get it working
+* Auto-enable sync
 
 Testclient
 * http://www.plaxo.com/pdata/testClient
 
-
 Changelog
+0.2
+* Added syncronization of addresses
+* 
+
 0.1
 * Initial release (Supports syncing name, e-mails, URLs, phone numbers and picture)
