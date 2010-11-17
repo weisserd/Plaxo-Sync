@@ -6,10 +6,12 @@ import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -112,8 +114,7 @@ public class PlaxoAuthenticatorActivity extends AccountAuthenticatorActivity {
 			mAccountManager.addAccountExplicitly(account, mPassword, userData);
 
 			// Set contacts sync for this account.
-			// ContentResolver.setSyncAutomatically(account,
-			// ContactsContract.AUTHORITY, true);
+			ContentResolver.setSyncAutomatically(account, ContactsContract.AUTHORITY, true);
 			ContactManager.makeGroupVisible(account.name, getContentResolver());
 		} else {
 			mAccountManager.setPassword(account, mPassword);

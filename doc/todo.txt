@@ -3,7 +3,6 @@ TODOs
 ==
 
 Ideas
-* Auto-enable sync
 
 Testclient
 * http://www.plaxo.com/pdata/testClient
@@ -11,7 +10,7 @@ Testclient
 Changelog
 0.2
 * Added syncronization of addresses
-* 
+* Enable the sync automatically for newly added accounts
 
 0.1
 * Initial release (Supports syncing name, e-mails, URLs, phone numbers and picture)
