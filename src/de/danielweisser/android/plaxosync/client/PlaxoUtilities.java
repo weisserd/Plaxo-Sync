@@ -47,8 +47,7 @@ public class PlaxoUtilities {
 	 * Executes the network requests on a separate thread.
 	 * 
 	 * @param runnable
-	 *            The runnable instance containing network operations to be
-	 *            executed.
+	 *            The runnable instance containing network operations to be executed.
 	 */
 	public static Thread performOnBackgroundThread(final Runnable runnable) {
 		final Thread t = new Thread() {
@@ -64,27 +63,21 @@ public class PlaxoUtilities {
 		return t;
 	}
 
-	private static DefaultHttpClient getPlaxoConnection(String username,
-			String password) throws PlaxoLoginException {
+	private static DefaultHttpClient getPlaxoConnection(String username, String password) throws PlaxoLoginException {
 		DefaultHttpClient httpclient = null;
 		try {
 			httpclient = new DefaultHttpClient();
 			httpclient.setRedirectHandler(new RedirectHandler() {
-				public URI getLocationURI(HttpResponse response,
-						HttpContext context) throws ProtocolException {
+				public URI getLocationURI(HttpResponse response, HttpContext context) throws ProtocolException {
 					return null;
 				}
 
-				public boolean isRedirectRequested(HttpResponse response,
-						HttpContext context) {
+				public boolean isRedirectRequested(HttpResponse response, HttpContext context) {
 					return false;
 				}
 			});
-			httpclient.getCredentialsProvider().setCredentials(
-					new AuthScope(null, -1),
-					new UsernamePasswordCredentials(username, password));
-			HttpGet httpget = new HttpGet(
-					"https://www.plaxo.com/pdata/contacts/@me/@all?count=1");
+			httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(username, password));
+			HttpGet httpget = new HttpGet("https://www.plaxo.com/pdata/contacts/@me/@all?count=1");
 			HttpResponse response = httpclient.execute(httpget);
 			HttpEntity entity = response.getEntity();
 
@@ -93,8 +86,7 @@ public class PlaxoUtilities {
 				entity.consumeContent();
 			}
 			if (response.getStatusLine().getStatusCode() != 200) {
-				throw new PlaxoLoginException("Got error code: "
-						+ response.getStatusLine().getStatusCode());
+				throw new PlaxoLoginException("Got error code: " + response.getStatusLine().getStatusCode());
 			}
 		} catch (ClientProtocolException e) {
 			Log.e(TAG, e.getMessage(), e);
@@ -115,11 +107,9 @@ public class PlaxoUtilities {
 	 *            The handler instance from the calling UI thread.
 	 * @param context
 	 *            The context of the calling Activity.
-	 * @return boolean The boolean result indicating whether the user was
-	 *         successfully authenticated.
+	 * @return boolean The boolean result indicating whether the user was successfully authenticated.
 	 */
-	public static boolean authenticate(String username, String password,
-			Handler handler, final Context context) {
+	public static boolean authenticate(String username, String password, Handler handler, final Context context) {
 		DefaultHttpClient httpclient = null;
 		try {
 			httpclient = getPlaxoConnection(username, password);
@@ -140,8 +130,7 @@ public class PlaxoUtilities {
 	}
 
 	/**
-	 * Sends the authentication response from server back to the caller main UI
-	 * thread through its handler.
+	 * Sends the authentication response from server back to the caller main UI thread through its handler.
 	 * 
 	 * @param result
 	 *            The boolean holding authentication result
@@ -151,15 +140,13 @@ public class PlaxoUtilities {
 	 *            The caller Activity's context.
 	 * @param message
 	 */
-	private static void sendResult(final Boolean result, final Handler handler,
-			final Context context, final String message) {
+	private static void sendResult(final Boolean result, final Handler handler, final Context context, final String message) {
 		if (handler == null || context == null) {
 			return;
 		}
 		handler.post(new Runnable() {
 			public void run() {
-				((PlaxoAuthenticatorActivity) context).onAuthenticationResult(
-						result, message);
+				((PlaxoAuthenticatorActivity) context).onAuthenticationResult(result, message);
 			}
 		});
 	}
@@ -177,8 +164,7 @@ public class PlaxoUtilities {
 	 *            The caller Activity's context
 	 * @return Thread The thread on which the network mOperations are executed.
 	 */
-	public static Thread attemptAuth(final String username,
-			final String password, final Handler handler, final Context context) {
+	public static Thread attemptAuth(final String username, final String password, final Handler handler, final Context context) {
 		return PlaxoUtilities.performOnBackgroundThread(new Runnable() {
 			public void run() {
 				authenticate(username, password, handler, context);
@@ -186,8 +172,7 @@ public class PlaxoUtilities {
 		});
 	}
 
-	public static List<Contact> fetchContacts(String username, String password,
-			Date mLastUpdated, final Context context) {
+	public static List<Contact> fetchContacts(String username, String password, Date mLastUpdated, final Context context) {
 		final ArrayList<Contact> friendList = new ArrayList<Contact>();
 
 		DefaultHttpClient httpclient = null;
@@ -195,20 +180,16 @@ public class PlaxoUtilities {
 			httpclient = getPlaxoConnection(username, password);
 			if (httpclient != null) {
 				// Request VCard
-				HttpGet httpget = new HttpGet(
-						"https://www.plaxo.com/pdata/contacts/@me/@all?count=500");
+				HttpGet httpget = new HttpGet("https://www.plaxo.com/pdata/contacts/@me/@all");
 				HttpResponse response = httpclient.execute(httpget);
 				HttpEntity entity = response.getEntity();
 
 				if (entity != null) {
-					BufferedReader in = new BufferedReader(
-							new InputStreamReader(entity.getContent()));
+					BufferedReader in = new BufferedReader(new InputStreamReader(entity.getContent()));
 					File sdCard = Environment.getExternalStorageDirectory();
-					File dir = new File(sdCard.getAbsolutePath()
-							+ Constants.SDCARD_FOLDER);
+					File dir = new File(sdCard.getAbsolutePath() + Constants.SDCARD_FOLDER);
 					dir.mkdirs();
-					BufferedWriter f = new BufferedWriter(new FileWriter(
-							new File(dir, "plaxosync.json")));
+					BufferedWriter f = new BufferedWriter(new FileWriter(new File(dir, "plaxosync.json")));
 					String inputLine;
 					StringBuffer contacts = new StringBuffer();
 					while ((inputLine = in.readLine()) != null) {
@@ -219,7 +200,7 @@ public class PlaxoUtilities {
 					JSONArray jsonArray = allData.getJSONArray("entry");
 					for (int i = 0; i < jsonArray.length(); i++) {
 						Contact u = Contact.valueOf(jsonArray.getJSONObject(i));
-						if (u.getFirstName() != null && u.getLastName() != null) {
+						if (u != null && u.getFirstName() != null && u.getLastName() != null) {
 							friendList.add(u);
 						}
 					}
@@ -230,17 +211,13 @@ public class PlaxoUtilities {
 			}
 		} catch (Exception e) {
 			Log.e(TAG, e.getMessage(), e);
-			NotificationManager mNotificationManager = (NotificationManager) context
-					.getSystemService(Context.NOTIFICATION_SERVICE);
+			NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 			int icon = R.drawable.icon;
 			CharSequence tickerText = "Error on Plaxo Sync";
-			Notification notification = new Notification(icon, tickerText,
-					System.currentTimeMillis());
+			Notification notification = new Notification(icon, tickerText, System.currentTimeMillis());
 			Intent notificationIntent = new Intent(context, SyncService.class);
-			PendingIntent contentIntent = PendingIntent.getService(context, 0,
-					notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-			notification.setLatestEventInfo(context, tickerText,
-					e.getMessage(), contentIntent);
+			PendingIntent contentIntent = PendingIntent.getService(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+			notification.setLatestEventInfo(context, tickerText, e.getMessage(), contentIntent);
 			notification.flags = Notification.FLAG_AUTO_CANCEL;
 			mNotificationManager.notify(0, notification);
 			return null;
