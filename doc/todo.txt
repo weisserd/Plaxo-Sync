@@ -8,6 +8,11 @@ Testclient
 * http://www.plaxo.com/pdata/testClient
 
 Changelog
+0.3
+* Removed size limit for fetched number of contacts
+* Fixed a problem with importing a large number of contacts
+* Improved the parsing of address data. This fixes the behavior that not all contact data was visible.
+
 0.2
 * Added syncronization of addresses
 * Enable the sync automatically for newly added accounts
