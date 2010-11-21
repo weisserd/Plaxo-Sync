@@ -245,14 +245,20 @@ public class Contact {
 	 */
 	public static Contact valueOf(JSONObject jsonObject) {
 		Contact c = new Contact();
+
+		// Name
 		try {
 			c.setID(jsonObject.getString("id"));
-			// Name
+
 			JSONObject jsonName = jsonObject.getJSONObject("name");
 			c.setFirstName(jsonName.getString("givenName"));
 			c.setLastName(jsonName.getString("familyName"));
+		} catch (JSONException e) {
+			return null;
+		}
 
-			// Photo
+		// Photo
+		try {
 			JSONArray jsonPictureArray = jsonObject.getJSONArray("photos");
 			for (int i = 0; i < jsonPictureArray.length(); i++) {
 				JSONObject jsonPicture = jsonPictureArray.getJSONObject(i);
@@ -260,8 +266,12 @@ public class Contact {
 					c.setImageURL(jsonPicture.getString("value"));
 				}
 			}
+		} catch (JSONException e) {
+			// No photo available
+		}
 
-			// E-Mails
+		// E-Mails
+		try {
 			JSONArray jsonMailArray = jsonObject.getJSONArray("emails");
 			for (int i = 0; i < jsonMailArray.length(); i++) {
 				JSONObject jsonMail = jsonMailArray.getJSONObject(i);
@@ -271,8 +281,12 @@ public class Contact {
 					c.setHomeEmail(jsonMail.getString("value"));
 				}
 			}
+		} catch (JSONException e) {
+			// No e-mail available
+		}
 
-			// URLs
+		// URLs
+		try {
 			JSONArray jsonURLArray = jsonObject.getJSONArray("urls");
 			for (int i = 0; i < jsonURLArray.length(); i++) {
 				JSONObject jsonURL = jsonURLArray.getJSONObject(i);
@@ -282,8 +296,12 @@ public class Contact {
 					c.setHomeURL(jsonURL.getString("value"));
 				}
 			}
+		} catch (JSONException e) {
+			// No URL available
+		}
 
-			// Phone numbers
+		// Phone numbers
+		try {
 			JSONArray jsonPhoneArray = jsonObject.getJSONArray("phoneNumbers");
 			for (int i = 0; i < jsonPhoneArray.length(); i++) {
 				JSONObject jsonPhone = jsonPhoneArray.getJSONObject(i);
@@ -297,9 +315,14 @@ public class Contact {
 					c.setCellWorkPhone(jsonPhone.getString("value"));
 				}
 			}
+		} catch (JSONException e) {
+			// No phone numbers available
+		}
 
-			// TODO Company
-
+		// TODO Company
+		
+		// Addresses
+		try {
 			JSONArray jsonAddressArray = jsonObject.getJSONArray("addresses");
 			for (int i = 0; i < jsonAddressArray.length(); i++) {
 				JSONObject jsonAddress = jsonAddressArray.getJSONObject(i);
@@ -318,7 +341,7 @@ public class Contact {
 				}
 			}
 		} catch (JSONException e) {
-			Log.e(TAG, "Problem on parsing JSON", e);
+			// No addresses available
 		}
 
 		return c;
