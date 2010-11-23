@@ -172,11 +172,19 @@ public class ContactManager {
 			Log.e(TAG, e.getMessage(), e);
 		} catch (SQLiteException e) {
 			Log.e(TAG, e.getMessage(), e);
+		} catch (IllegalStateException e) {
+			Log.e(TAG, e.getMessage(), e);
 		}
 	}
 
 	private void deleteContact(ContentResolver resolver, Long rawContactId) {
-		resolver.delete(RawContacts.CONTENT_URI, RawContacts._ID + "=?", new String[] { "" + rawContactId });
+		try {
+			resolver.delete(RawContacts.CONTENT_URI, RawContacts._ID + "=?", new String[] { "" + rawContactId });
+		} catch (SQLiteException e) {
+			Log.e(TAG, e.getMessage(), e);
+		} catch (IllegalStateException e) {
+			Log.e(TAG, e.getMessage(), e);
+		}
 	}
 
 	/**
