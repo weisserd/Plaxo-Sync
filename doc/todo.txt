@@ -10,6 +10,7 @@ Testclient
 Changelog
 0.3.1
 * Bugfix for concurrently running sync adapters
+* Bugfix for a possible NullPointer
 
 0.3
 * Removed size limit for fetched number of contacts
