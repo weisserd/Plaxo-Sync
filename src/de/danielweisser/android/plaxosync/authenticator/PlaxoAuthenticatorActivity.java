@@ -54,6 +54,7 @@ public class PlaxoAuthenticatorActivity extends AccountAuthenticatorActivity {
 	private String mUsername;
 	private EditText mUsernameEdit;
 	private String message;
+	private Dialog dialog;
 
 	@Override
 	public void onCreate(Bundle bundle) {
@@ -153,7 +154,11 @@ public class PlaxoAuthenticatorActivity extends AccountAuthenticatorActivity {
 	 */
 	public void onAuthenticationResult(boolean result, String message) {
 		Log.i(TAG, "onAuthenticationResult(" + result + ")");
-		dismissDialog(PROGRESS_DIALOG);
+		
+		if (dialog != null) {
+			dialog.dismiss();
+		}
+		
 		if (!result) {
 			this.message = message;
 			showDialog(ERROR_DIALOG);
@@ -183,6 +188,7 @@ public class PlaxoAuthenticatorActivity extends AccountAuthenticatorActivity {
 					}
 				}
 			});
+			this.dialog = dialog;
 			return dialog;
 		} else if (id == ERROR_DIALOG) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
