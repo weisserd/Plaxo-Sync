@@ -196,6 +196,9 @@ public class PlaxoUtilities {
 						f.write(inputLine + "\n");
 						contacts.append(inputLine);
 					}
+					f.close();
+					entity.consumeContent();
+					
 					JSONObject allData = new JSONObject(contacts.toString());
 					JSONArray jsonArray = allData.getJSONArray("entry");
 					for (int i = 0; i < jsonArray.length(); i++) {
@@ -205,8 +208,6 @@ public class PlaxoUtilities {
 						}
 					}
 					Log.d(TAG, "Number of contacts: " + friendList.size());
-					f.close();
-					entity.consumeContent();
 				}
 			}
 		} catch (Exception e) {
