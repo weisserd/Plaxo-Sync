@@ -98,11 +98,19 @@ public class Contact {
 					HttpEntity entity = response.getEntity();
 					BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
 					InputStream instream = bufHttpEntity.getContent();
-					Bitmap bm = BitmapFactory.decodeStream(instream);
-					if (bm != null) {
-						ByteArrayOutputStream baos = new ByteArrayOutputStream();
-						bm.compress(Bitmap.CompressFormat.JPEG, 70, baos);
-						image = baos.toByteArray();
+					try {
+						Bitmap bm = BitmapFactory.decodeStream(instream);
+						if (bm != null) {
+							ByteArrayOutputStream baos = new ByteArrayOutputStream();
+							bm.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+							image = baos.toByteArray();
+						}
+					} catch (OutOfMemoryError e) {
+						// Do not set an image, when an OutOfMemoryError occurs
+						image = null;
+					} finally {
+						instream.close();
+						entity.consumeContent();
 					}
 				} catch (ClientProtocolException e) {
 					Log.e(TAG, e.getMessage(), e);
