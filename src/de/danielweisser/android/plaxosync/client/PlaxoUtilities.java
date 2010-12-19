@@ -197,6 +197,7 @@ public class PlaxoUtilities {
 						contacts.append(inputLine);
 					}
 					f.close();
+					in.close();
 					entity.consumeContent();
 					
 					JSONObject allData = new JSONObject(contacts.toString());
