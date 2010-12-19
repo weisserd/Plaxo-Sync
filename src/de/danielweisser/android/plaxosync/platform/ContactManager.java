@@ -97,72 +97,73 @@ public class ContactManager {
 		final String selection = Data.RAW_CONTACT_ID + "=?";
 		final String[] projection = new String[] { Data.MIMETYPE, Data.DATA1, Data.DATA2, Data.DATA3, Data.DATA4, Data.DATA7, Data.DATA8, Data.DATA9,
 				Data.DATA10, Data.DATA15 };
-		final Cursor c = resolver.query(Data.CONTENT_URI, projection, selection, new String[] { rawContactId + "" }, null);
 
-		if (c != null) {
-			while (c.moveToNext()) {
-				String mimetype = c.getString(c.getColumnIndex(Data.MIMETYPE));
-				if (mimetype.equals(StructuredName.CONTENT_ITEM_TYPE)) {
-					existingContact.setFirstName(c.getString(c.getColumnIndex(Data.DATA2)));
-					existingContact.setLastName(c.getString(c.getColumnIndex(Data.DATA3)));
-					existingContact.setNamePrefix(c.getString(c.getColumnIndex(Data.DATA4)));
-				} else if (mimetype.equals(Email.CONTENT_ITEM_TYPE)) {
-					int type = c.getInt(c.getColumnIndex(Data.DATA2));
-					if (type == Email.TYPE_HOME) {
-						existingContact.setHomeEmail(c.getString(c.getColumnIndex(Data.DATA1)));
-					} else if (type == Email.TYPE_WORK) {
-						existingContact.setWorkEmail(c.getString(c.getColumnIndex(Data.DATA1)));
-					}
-				} else if (mimetype.equals(Phone.CONTENT_ITEM_TYPE)) {
-					int type = c.getInt(c.getColumnIndex(Data.DATA2));
-					if (type == Phone.TYPE_WORK_MOBILE) {
-						existingContact.setCellWorkPhone(c.getString(c.getColumnIndex(Data.DATA1)));
-					} else if (type == Phone.TYPE_WORK) {
-						existingContact.setWorkPhone(c.getString(c.getColumnIndex(Data.DATA1)));
-					} else if (type == Phone.TYPE_HOME) {
-						existingContact.setHomePhone(c.getString(c.getColumnIndex(Data.DATA1)));
-					} else if (type == Phone.TYPE_MOBILE) {
-						existingContact.setCellHomePhone(c.getString(c.getColumnIndex(Data.DATA1)));
-					} else if (type == Phone.TYPE_FAX_HOME) {
-						existingContact.setHomeFax(c.getString(c.getColumnIndex(Data.DATA1)));
-					} else if (type == Phone.TYPE_FAX_WORK) {
-						existingContact.setWorkFax(c.getString(c.getColumnIndex(Data.DATA1)));
-					}
-				} else if (mimetype.equals(Website.CONTENT_ITEM_TYPE)) {
-					int type = c.getInt(c.getColumnIndex(Data.DATA2));
-					if (type == Website.TYPE_HOME) {
-						existingContact.setHomeURL(c.getString(c.getColumnIndex(Data.DATA1)));
-					} else if (type == Website.TYPE_WORK) {
-						existingContact.setWorkURL(c.getString(c.getColumnIndex(Data.DATA1)));
-					}
-				} else if (mimetype.equals(Organization.CONTENT_ITEM_TYPE)) {
-					int type = c.getInt(c.getColumnIndex(Data.DATA2));
-					if (type == Organization.TYPE_WORK) {
-						existingContact.setCompany(c.getString(c.getColumnIndex(Data.DATA1)));
-						existingContact.setTitle(c.getString(c.getColumnIndex(Data.DATA4)));
-					}
-				} else if (mimetype.equals(Photo.CONTENT_ITEM_TYPE)) {
-					existingContact.setImage(c.getBlob(c.getColumnIndex(Photo.PHOTO)));
-				} else if (mimetype.equals(StructuredPostal.CONTENT_ITEM_TYPE)) {
-					int type = c.getInt(c.getColumnIndex(Data.DATA2));
-					Address address = new Address();
-					address.setStreet(c.getString(c.getColumnIndex(Data.DATA4)));
-					address.setCity(c.getString(c.getColumnIndex(Data.DATA7)));
-					address.setCountry(c.getString(c.getColumnIndex(Data.DATA10)));
-					address.setZip(c.getString(c.getColumnIndex(Data.DATA9)));
-					address.setState(c.getString(c.getColumnIndex(Data.DATA8)));
-					if (type == StructuredPostal.TYPE_WORK) {
-						existingContact.setWorkAddress(address);
-					} else if (type == StructuredPostal.TYPE_HOME) {
-						existingContact.setHomeAddress(address);
+		try {
+			final Cursor c = resolver.query(Data.CONTENT_URI, projection, selection, new String[] { rawContactId + "" }, null);
+
+			if (c != null) {
+				while (c.moveToNext()) {
+					String mimetype = c.getString(c.getColumnIndex(Data.MIMETYPE));
+					if (mimetype.equals(StructuredName.CONTENT_ITEM_TYPE)) {
+						existingContact.setFirstName(c.getString(c.getColumnIndex(Data.DATA2)));
+						existingContact.setLastName(c.getString(c.getColumnIndex(Data.DATA3)));
+						existingContact.setNamePrefix(c.getString(c.getColumnIndex(Data.DATA4)));
+					} else if (mimetype.equals(Email.CONTENT_ITEM_TYPE)) {
+						int type = c.getInt(c.getColumnIndex(Data.DATA2));
+						if (type == Email.TYPE_HOME) {
+							existingContact.setHomeEmail(c.getString(c.getColumnIndex(Data.DATA1)));
+						} else if (type == Email.TYPE_WORK) {
+							existingContact.setWorkEmail(c.getString(c.getColumnIndex(Data.DATA1)));
+						}
+					} else if (mimetype.equals(Phone.CONTENT_ITEM_TYPE)) {
+						int type = c.getInt(c.getColumnIndex(Data.DATA2));
+						if (type == Phone.TYPE_WORK_MOBILE) {
+							existingContact.setCellWorkPhone(c.getString(c.getColumnIndex(Data.DATA1)));
+						} else if (type == Phone.TYPE_WORK) {
+							existingContact.setWorkPhone(c.getString(c.getColumnIndex(Data.DATA1)));
+						} else if (type == Phone.TYPE_HOME) {
+							existingContact.setHomePhone(c.getString(c.getColumnIndex(Data.DATA1)));
+						} else if (type == Phone.TYPE_MOBILE) {
+							existingContact.setCellHomePhone(c.getString(c.getColumnIndex(Data.DATA1)));
+						} else if (type == Phone.TYPE_FAX_HOME) {
+							existingContact.setHomeFax(c.getString(c.getColumnIndex(Data.DATA1)));
+						} else if (type == Phone.TYPE_FAX_WORK) {
+							existingContact.setWorkFax(c.getString(c.getColumnIndex(Data.DATA1)));
+						}
+					} else if (mimetype.equals(Website.CONTENT_ITEM_TYPE)) {
+						int type = c.getInt(c.getColumnIndex(Data.DATA2));
+						if (type == Website.TYPE_HOME) {
+							existingContact.setHomeURL(c.getString(c.getColumnIndex(Data.DATA1)));
+						} else if (type == Website.TYPE_WORK) {
+							existingContact.setWorkURL(c.getString(c.getColumnIndex(Data.DATA1)));
+						}
+					} else if (mimetype.equals(Organization.CONTENT_ITEM_TYPE)) {
+						int type = c.getInt(c.getColumnIndex(Data.DATA2));
+						if (type == Organization.TYPE_WORK) {
+							existingContact.setCompany(c.getString(c.getColumnIndex(Data.DATA1)));
+							existingContact.setTitle(c.getString(c.getColumnIndex(Data.DATA4)));
+						}
+					} else if (mimetype.equals(Photo.CONTENT_ITEM_TYPE)) {
+						existingContact.setImage(c.getBlob(c.getColumnIndex(Photo.PHOTO)));
+					} else if (mimetype.equals(StructuredPostal.CONTENT_ITEM_TYPE)) {
+						int type = c.getInt(c.getColumnIndex(Data.DATA2));
+						Address address = new Address();
+						address.setStreet(c.getString(c.getColumnIndex(Data.DATA4)));
+						address.setCity(c.getString(c.getColumnIndex(Data.DATA7)));
+						address.setCountry(c.getString(c.getColumnIndex(Data.DATA10)));
+						address.setZip(c.getString(c.getColumnIndex(Data.DATA9)));
+						address.setState(c.getString(c.getColumnIndex(Data.DATA8)));
+						if (type == StructuredPostal.TYPE_WORK) {
+							existingContact.setWorkAddress(address);
+						} else if (type == StructuredPostal.TYPE_HOME) {
+							existingContact.setHomeAddress(address);
+						}
 					}
 				}
 			}
-		}
 
-		prepareFields(rawContactId, contact, existingContact, ops, false);
+			prepareFields(rawContactId, contact, existingContact, ops, false);
 
-		try {
 			if (ops.size() > 0) {
 				resolver.applyBatch(ContactsContract.AUTHORITY, ops);
 			}

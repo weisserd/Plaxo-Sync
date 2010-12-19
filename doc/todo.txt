@@ -8,6 +8,9 @@ Testclient
 * http://www.plaxo.com/pdata/testClient
 
 Changelog
+0.3.2
+* Bugfixes
+
 0.3.1
 * Bugfix for concurrently running sync adapters
 * Bugfix for a possible NullPointer
