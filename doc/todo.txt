@@ -8,6 +8,11 @@ Testclient
 * http://www.plaxo.com/pdata/testClient
 
 Changelog
+0.4
+* Removed the trace handler
+* Less verbose with the notification manager
+* Improved error messages
+
 0.3.2
 * Bugfixes
 
