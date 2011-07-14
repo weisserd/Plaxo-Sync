@@ -12,6 +12,7 @@ Changelog
 * Removed the trace handler
 * Less verbose with the notification manager
 * Improved error messages
+* Memory handling improvements
 
 0.3.2
 * Bugfixes

@@ -11,9 +11,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.async.json.JSONArray;
+import org.async.json.JSONObject;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -247,100 +246,82 @@ public class Contact {
 	/**
 	 * Creates and returns an instance of the contact from the provided JSON data.
 	 * 
-	 * @param jsonObject
+	 * @param entry
 	 * 
 	 * @return user The new instance of a contact created from the JSON data.
 	 */
-	public static Contact valueOf(JSONObject jsonObject) {
+	@SuppressWarnings("unchecked")
+	public static Contact valueOf(org.async.json.JSONObject entry) {
 		Contact c = new Contact();
 
 		// Name
-		try {
-			c.setID(jsonObject.getString("id"));
+		c.setID(entry.getString("id"));
 
-			JSONObject jsonName = jsonObject.getJSONObject("name");
-			c.setFirstName(jsonName.getString("givenName"));
-			c.setLastName(jsonName.getString("familyName"));
-		} catch (JSONException e) {
-			return null;
-		}
+		JSONObject jsonName = entry.getObject("name");
+		c.setFirstName(jsonName.getString("givenName"));
+		c.setLastName(jsonName.getString("familyName"));
 
 		// Photo
-		try {
-			JSONArray jsonPictureArray = jsonObject.getJSONArray("photos");
-			for (int i = 0; i < jsonPictureArray.length(); i++) {
-				JSONObject jsonPicture = jsonPictureArray.getJSONObject(i);
-				if (jsonPicture.has("type") && jsonPicture.getString("type").equals("home")) {
+		if (entry.contains("photos")) {
+			JSONArray<JSONObject> jsonPictureArray = (JSONArray<JSONObject>) entry.getArray("photos");
+			for (JSONObject jsonPicture : jsonPictureArray) {
+				if (jsonPicture.contains("type") && jsonPicture.getString("type").equals("home")) {
 					c.setImageURL(jsonPicture.getString("value"));
 				}
 			}
-		} catch (JSONException e) {
-			// No photo available
 		}
 
 		// E-Mails
-		try {
-			JSONArray jsonMailArray = jsonObject.getJSONArray("emails");
-			for (int i = 0; i < jsonMailArray.length(); i++) {
-				JSONObject jsonMail = jsonMailArray.getJSONObject(i);
-				if (jsonMail.has("type") && jsonMail.getString("type").equals("work")) {
+		if (entry.contains("emails")) {
+			JSONArray<JSONObject> jsonMailArray = (JSONArray<JSONObject>) entry.getArray("emails");
+			for (JSONObject jsonMail : jsonMailArray) {
+				if (jsonMail.contains("type") && jsonMail.getString("type").equals("work")) {
 					c.setWorkEmail(jsonMail.getString("value"));
-				} else if (jsonMail.has("type") && jsonMail.getString("type").equals("home")) {
+				} else if (jsonMail.contains("type") && jsonMail.getString("type").equals("home")) {
 					c.setHomeEmail(jsonMail.getString("value"));
 				}
 			}
-		} catch (JSONException e) {
-			// No e-mail available
 		}
 
 		// URLs
-		try {
-			JSONArray jsonURLArray = jsonObject.getJSONArray("urls");
-			for (int i = 0; i < jsonURLArray.length(); i++) {
-				JSONObject jsonURL = jsonURLArray.getJSONObject(i);
-				if (jsonURL.has("type") && jsonURL.getString("type").equals("work")) {
+		if (entry.contains("urls")) {
+			JSONArray<JSONObject> jsonURLArray = (JSONArray<JSONObject>) entry.getArray("urls");
+			for (JSONObject jsonURL : jsonURLArray) {
+				if (jsonURL.contains("type") && jsonURL.getString("type").equals("work")) {
 					c.setWorkURL(jsonURL.getString("value"));
-				} else if (jsonURL.has("type") && jsonURL.getString("type").equals("home")) {
+				} else if (jsonURL.contains("type") && jsonURL.getString("type").equals("home")) {
 					c.setHomeURL(jsonURL.getString("value"));
 				}
 			}
-		} catch (JSONException e) {
-			// No URL available
 		}
 
 		// Phone numbers
-		try {
-			JSONArray jsonPhoneArray = jsonObject.getJSONArray("phoneNumbers");
-			for (int i = 0; i < jsonPhoneArray.length(); i++) {
-				JSONObject jsonPhone = jsonPhoneArray.getJSONObject(i);
-				if (jsonPhone.has("type") && jsonPhone.getString("type").equals("work")) {
+		if (entry.contains("phoneNumbers")) {
+			JSONArray<JSONObject> jsonPhoneArray = (JSONArray<JSONObject>) entry.getArray("phoneNumbers");
+			for (JSONObject jsonPhone : jsonPhoneArray) {
+				if (jsonPhone.contains("type") && jsonPhone.getString("type").equals("work")) {
 					c.setWorkPhone(jsonPhone.getString("value"));
-				} else if (jsonPhone.has("type") && jsonPhone.getString("type").equals("home")) {
+				} else if (jsonPhone.contains("type") && jsonPhone.getString("type").equals("home")) {
 					c.setHomePhone(jsonPhone.getString("value"));
-				} else if (jsonPhone.has("type") && jsonPhone.getString("type").equals("fax")) {
+				} else if (jsonPhone.contains("type") && jsonPhone.getString("type").equals("fax")) {
 					c.setWorkFax(jsonPhone.getString("value"));
-				} else if (jsonPhone.has("type") && jsonPhone.getString("type").equals("mobile")) {
+				} else if (jsonPhone.contains("type") && jsonPhone.getString("type").equals("mobile")) {
 					c.setCellWorkPhone(jsonPhone.getString("value"));
 				}
 			}
-		} catch (JSONException e) {
-			// No phone numbers available
 		}
 
-		// TODO Company
-		
 		// Addresses
-		try {
-			JSONArray jsonAddressArray = jsonObject.getJSONArray("addresses");
-			for (int i = 0; i < jsonAddressArray.length(); i++) {
-				JSONObject jsonAddress = jsonAddressArray.getJSONObject(i);
+		if (entry.contains("addresses")) {
+			JSONArray<JSONObject> jsonAddressArray = (JSONArray<JSONObject>) entry.getArray("addresses");
+			for (JSONObject jsonAddress : jsonAddressArray) {
 				Address a = new Address();
-				a.setStreet(jsonAddress.has("streetAddress") ? jsonAddress.getString("streetAddress") : "");
-				a.setCity(jsonAddress.has("locality") ? jsonAddress.getString("locality") : "");
-				a.setZip(jsonAddress.has("postalCode") ? jsonAddress.getString("postalCode") : "");
-				a.setState(jsonAddress.has("region") ? jsonAddress.getString("region") : "");
-				a.setCountry(jsonAddress.has("country") ? jsonAddress.getString("country") : "");
-				if (jsonAddress.has("type")) {
+				a.setStreet(jsonAddress.contains("streetAddress") ? jsonAddress.getString("streetAddress") : "");
+				a.setCity(jsonAddress.contains("locality") ? jsonAddress.getString("locality") : "");
+				a.setZip(jsonAddress.contains("postalCode") ? jsonAddress.getString("postalCode") : "");
+				a.setState(jsonAddress.contains("region") ? jsonAddress.getString("region") : "");
+				a.setCountry(jsonAddress.contains("country") ? jsonAddress.getString("country") : "");
+				if (jsonAddress.contains("type")) {
 					if (jsonAddress.getString("type").equals("work")) {
 						c.setWorkAddress(a);
 					} else if (jsonAddress.getString("type").equals("home")) {
@@ -348,8 +329,6 @@ public class Contact {
 					}
 				}
 			}
-		} catch (JSONException e) {
-			// No addresses available
 		}
 
 		return c;
