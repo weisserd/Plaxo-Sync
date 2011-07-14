@@ -22,20 +22,15 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HttpContext;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import de.danielweisser.android.plaxosync.Constants;
-import de.danielweisser.android.plaxosync.R;
 import de.danielweisser.android.plaxosync.authenticator.PlaxoAuthenticatorActivity;
-import de.danielweisser.android.plaxosync.syncadapter.SyncService;
 
 /**
  * Provides utility methods for communicating with the server.
@@ -86,7 +81,11 @@ public class PlaxoUtilities {
 				entity.consumeContent();
 			}
 			if (response.getStatusLine().getStatusCode() != 200) {
-				throw new PlaxoLoginException("Got error code: " + response.getStatusLine().getStatusCode());
+				if (response.getStatusLine().getStatusCode() == 401) {
+					throw new PlaxoLoginException("Wrong username or password");
+				} else {
+					throw new PlaxoLoginException("Error on connecting to Plaxo. Error code: " + response.getStatusLine().getStatusCode());
+				}
 			}
 		} catch (ClientProtocolException e) {
 			Log.e(TAG, e.getMessage(), e);
@@ -179,7 +178,7 @@ public class PlaxoUtilities {
 		try {
 			httpclient = getPlaxoConnection(username, password);
 			if (httpclient != null) {
-				// Request VCard
+				// Request JSON
 				HttpGet httpget = new HttpGet("https://www.plaxo.com/pdata/contacts/@me/@all");
 				HttpResponse response = httpclient.execute(httpget);
 				HttpEntity entity = response.getEntity();
@@ -199,7 +198,7 @@ public class PlaxoUtilities {
 					f.close();
 					in.close();
 					entity.consumeContent();
-					
+
 					JSONObject allData = new JSONObject(contacts.toString());
 					JSONArray jsonArray = allData.getJSONArray("entry");
 					for (int i = 0; i < jsonArray.length(); i++) {
@@ -211,18 +210,14 @@ public class PlaxoUtilities {
 					Log.d(TAG, "Number of contacts: " + friendList.size());
 				}
 			}
-		} catch (Exception e) {
+		} catch (PlaxoLoginException e) {
 			Log.e(TAG, e.getMessage(), e);
-			NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-			int icon = R.drawable.icon;
-			CharSequence tickerText = "Error on Plaxo Sync";
-			Notification notification = new Notification(icon, tickerText, System.currentTimeMillis());
-			Intent notificationIntent = new Intent(context, SyncService.class);
-			PendingIntent contentIntent = PendingIntent.getService(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-			notification.setLatestEventInfo(context, tickerText, e.getMessage(), contentIntent);
-			notification.flags = Notification.FLAG_AUTO_CANCEL;
-			mNotificationManager.notify(0, notification);
-			return null;
+		} catch (ClientProtocolException e) {
+			Log.e(TAG, e.getMessage(), e);
+		} catch (IOException e) {
+			Log.e(TAG, e.getMessage(), e);
+		} catch (JSONException e) {
+			Log.e(TAG, e.getMessage(), e);
 		} finally {
 			if (httpclient != null) {
 				httpclient.getConnectionManager().shutdown();
