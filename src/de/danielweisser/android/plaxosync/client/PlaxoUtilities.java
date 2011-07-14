@@ -3,9 +3,11 @@ package de.danielweisser.android.plaxosync.client;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
@@ -61,8 +63,6 @@ public class PlaxoUtilities {
 	}
 
 	private static DefaultHttpClient getPlaxoConnection(String username, String password) throws PlaxoLoginException {
-		// TODO Remove
-		android.os.Debug.waitForDebugger();
 		DefaultHttpClient httpclient = null;
 		try {
 			httpclient = new DefaultHttpClient();
@@ -182,43 +182,16 @@ public class PlaxoUtilities {
 		try {
 			httpclient = getPlaxoConnection(username, password);
 			if (httpclient != null) {
-				// Request JSON
 				HttpGet httpget = new HttpGet("https://www.plaxo.com/pdata/contacts/@me/@all");
 				HttpResponse response = httpclient.execute(httpget);
 				HttpEntity entity = response.getEntity();
 
 				if (entity != null) {
-					BufferedReader in = new BufferedReader(new InputStreamReader(entity.getContent()));
-					File sdCard = Environment.getExternalStorageDirectory();
-					File dir = new File(sdCard.getAbsolutePath() + Constants.SDCARD_FOLDER);
-					dir.mkdirs();
-					File jsonFile = new File(dir, "plaxosync.json");
-					BufferedWriter f = new BufferedWriter(new FileWriter(new File(dir, "plaxosync.json")));
-					String inputLine;
-					while ((inputLine = in.readLine()) != null) {
-						f.write(inputLine + "\n");
-					}
-					f.close();
-					in.close();
+					InputStream contentStream = entity.getContent();
+					File jsonFile = writedataToSD(contentStream);
 					entity.consumeContent();
-					BufferedReader inJson = new BufferedReader(new FileReader(jsonFile));
 
-					// Async parsing of JSON
-					JSONParser jp = new JSONParser();
-					JSONReader jr = new JSONReader(inJson);
-					JSONObject jo = jp.parse(jr);
-					
-					@SuppressWarnings("unchecked")
-					JSONArray<JSONObject> entries = (JSONArray<JSONObject>) jo.getArray("entry");
-					for (JSONObject entry : entries) {
-						Contact u = Contact.valueOf(entry);
-						if (u != null && u.getFirstName() != null && u.getLastName() != null) {
-							friendList.add(u);
-						}
-					}
-					jr.close();
-					inJson.close();
-
+					parseJSON(friendList, jsonFile);
 					Log.d(TAG, "Number of contacts: " + friendList.size());
 				}
 			}
@@ -235,5 +208,58 @@ public class PlaxoUtilities {
 		}
 
 		return friendList;
+	}
+
+	/**
+	 * Parses the JSON file from the SD card asynchronously.
+	 * 
+	 * @param friendList
+	 *            List with contacts
+	 * @param jsonFile
+	 *            JSON file on SD card
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	private static void parseJSON(final ArrayList<Contact> friendList, File jsonFile) throws FileNotFoundException, IOException {
+		BufferedReader inJson = new BufferedReader(new FileReader(jsonFile));
+
+		JSONParser jp = new JSONParser();
+		JSONReader jr = new JSONReader(inJson);
+		JSONObject jo = jp.parse(jr);
+
+		@SuppressWarnings("unchecked")
+		JSONArray<JSONObject> entries = (JSONArray<JSONObject>) jo.getArray("entry");
+		for (JSONObject entry : entries) {
+			Contact u = Contact.valueOf(entry);
+			if (u != null && u.getFirstName() != null && u.getLastName() != null) {
+				friendList.add(u);
+			}
+		}
+		jr.close();
+		inJson.close();
+	}
+
+	/**
+	 * Obtains the raw data and writes it to the SD card.
+	 * 
+	 * @param contentStream
+	 *            ContentStream to read from (HTTP access of Plaxo)
+	 * @return File handle to the written JSON file on the SD card
+	 * @throws IOException
+	 */
+	private static File writedataToSD(InputStream contentStream) throws IOException {
+		BufferedReader in = new BufferedReader(new InputStreamReader(contentStream));
+		File sdCard = Environment.getExternalStorageDirectory();
+		File dir = new File(sdCard.getAbsolutePath() + Constants.SDCARD_FOLDER);
+		dir.mkdirs();
+		File jsonFile = new File(dir, "plaxosync.json");
+		BufferedWriter f = new BufferedWriter(new FileWriter(new File(dir, "plaxosync.json")));
+		String inputLine;
+		while ((inputLine = in.readLine()) != null) {
+			f.write(inputLine + "\n");
+		}
+		f.close();
+		in.close();
+		return jsonFile;
 	}
 }

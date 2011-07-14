@@ -4,7 +4,8 @@ TODOs
 
 Ideas
 * Properties Page for login credentials
-* App which redirects to Settings		
+* App which redirects to Settings	
+* More tests: http://mobile.tutsplus.com/tutorials/android/android-sdk-junit-testing/	
 
 Testclient
 * http://www.plaxo.com/pdata/testClient
