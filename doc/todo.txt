@@ -3,6 +3,8 @@ TODOs
 ==
 
 Ideas
+* Properties Page for login credentials
+* App which redirects to Settings		
 
 Testclient
 * http://www.plaxo.com/pdata/testClient
@@ -13,6 +15,7 @@ Changelog
 * Less verbose with the notification manager
 * Improved error messages
 * Memory handling improvements
+* Sync company and title
 
 0.3.2
 * Bugfixes

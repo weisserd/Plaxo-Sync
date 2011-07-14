@@ -311,6 +311,18 @@ public class Contact {
 			}
 		}
 
+		// Company
+		if (entry.contains("organizations")) {
+			JSONArray<JSONObject> jsonOrganizationArray = (JSONArray<JSONObject>) entry.getArray("organizations");
+			JSONObject jsonOrganization = jsonOrganizationArray.getObject(0);
+			if (jsonOrganization.contains("name")) {
+				c.setCompany(jsonOrganization.getString("name"));
+			}
+			if (jsonOrganization.contains("title")) {
+				c.setTitle(jsonOrganization.getString("title"));
+			}
+		}
+
 		// Addresses
 		if (entry.contains("addresses")) {
 			JSONArray<JSONObject> jsonAddressArray = (JSONArray<JSONObject>) entry.getArray("addresses");
