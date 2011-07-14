@@ -1,7 +1,5 @@
 package de.danielweisser.android.plaxosync.syncadapter;
 
-import com.nullwire.trace.ExceptionHandler;
-
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -25,7 +23,6 @@ public class SyncService extends Service {
     public void onCreate() {
     	Log.v(TAG, "onCreate");
         synchronized (sSyncAdapterLock) {
-        	ExceptionHandler.register(this, "http://www.danielweisser.de/android/server.php");
             if (sSyncAdapter == null) {
                 sSyncAdapter = new SyncAdapter(getApplicationContext(), true);
             }

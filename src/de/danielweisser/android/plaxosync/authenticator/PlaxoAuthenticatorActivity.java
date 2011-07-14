@@ -16,8 +16,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-import com.nullwire.trace.ExceptionHandler;
-
 import de.danielweisser.android.plaxosync.Constants;
 import de.danielweisser.android.plaxosync.R;
 import de.danielweisser.android.plaxosync.client.PlaxoUtilities;
@@ -59,7 +57,6 @@ public class PlaxoAuthenticatorActivity extends AccountAuthenticatorActivity {
 	@Override
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
-		ExceptionHandler.register(this, "http://www.danielweisser.de/android/server.php");
 
 		mAccountManager = AccountManager.get(this);
 
