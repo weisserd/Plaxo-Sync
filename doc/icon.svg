@@ -13,14 +13,14 @@
    version="1.1"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    sodipodi:docname="icon.svg"
-   inkscape:version="0.47 r22583"
+   inkscape:version="0.48.1 r9760"
    sodipodi:version="0.32"
    id="svg1256"
    height="48px"
    width="48px"
-   inkscape:export-filename="/home/daniel/Privat/DocDoors/.workspace/PlaxoSync/res/drawable-mdpi/icon.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:export-filename="/home/daniel/TODO/Syncs/Sources/Plaxo-Sync/doc/HighResolutionApplicationIcon.png"
+   inkscape:export-xdpi="960"
+   inkscape:export-ydpi="960">
   <defs
      id="defs3">
     <inkscape:perspective
@@ -257,9 +257,9 @@
      showgrid="false"
      inkscape:grid-bbox="true"
      inkscape:document-units="px"
-     inkscape:window-width="1680"
-     inkscape:window-height="995"
-     inkscape:window-x="-4"
+     inkscape:window-width="1600"
+     inkscape:window-height="845"
+     inkscape:window-x="-2"
      inkscape:window-y="-3"
      fill="#ef2929"
      stroke="#cc0000"
@@ -377,11 +377,12 @@
        id="path2104"
        sodipodi:nodetypes="cccscssc" />
     <image
-       y="7.1429515"
-       x="12.6179"
-       id="image2826"
-       height="23.20101"
+       sodipodi:absref="/home/daniel/TODO/Syncs/Sources/Plaxo-Sync/doc/footerlogo.gif"
+       xlink:href="footerlogo.gif"
        width="23.20101"
-       xlink:href="footerlogo.gif" />
+       height="23.20101"
+       id="image2826"
+       x="12.6179"
+       y="7.1429515" />
   </g>
 </svg>
