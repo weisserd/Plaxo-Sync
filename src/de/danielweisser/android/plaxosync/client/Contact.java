@@ -260,6 +260,11 @@ public class Contact {
 		JSONObject jsonName = entry.getObject("name");
 		c.setFirstName(jsonName.getString("givenName"));
 		c.setLastName(jsonName.getString("familyName"));
+		
+		// Date of birth
+		if (entry.contains("birthday")) {
+			c.setDateOfBirth(jsonName.getString("birthday"));
+		}
 
 		// Photo
 		if (entry.contains("photos")) {
