@@ -263,7 +263,7 @@ public class Contact {
 		
 		// Date of birth
 		if (entry.contains("birthday")) {
-			c.setDateOfBirth(jsonName.getString("birthday"));
+			c.setDateOfBirth(entry.getString("birthday"));
 		}
 
 		// Photo

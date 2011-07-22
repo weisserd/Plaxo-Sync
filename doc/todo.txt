@@ -17,6 +17,7 @@ Changelog
 * Improved error messages
 * Memory handling improvements
 * Sync company and title
+* Sync the date of birth
 
 0.3.2
 * Bugfixes

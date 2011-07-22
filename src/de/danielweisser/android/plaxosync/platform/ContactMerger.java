@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.CommonDataKinds.Email;
+import android.provider.ContactsContract.CommonDataKinds.Event;
 import android.provider.ContactsContract.CommonDataKinds.Organization;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.Photo;
@@ -281,6 +282,28 @@ public class ContactMerger {
 			cv.put(StructuredPostal.REGION, newAddress.getState());
 			Builder updateOp = ContentProviderOperation.newUpdate(addCallerIsSyncAdapterFlag(Data.CONTENT_URI)).withSelection(selection,
 					new String[] { rawContactId + "", StructuredPostal.CONTENT_ITEM_TYPE, adressType + "" }).withValues(cv);
+			ops.add(updateOp.build());
+		}
+	}
+	
+	public void updateBirthday() {
+		String selection = Data.RAW_CONTACT_ID + "=? AND " + Event.MIMETYPE + "=?";
+		if (TextUtils.isEmpty(newC.getDateOfBirth()) && !TextUtils.isEmpty(existingC.getDateOfBirth())) {
+			l.d("Delete date of birth " + "(" + existingC.getDateOfBirth() + ")");
+			ops.add(ContentProviderOperation.newDelete(addCallerIsSyncAdapterFlag(Data.CONTENT_URI)).withSelection(selection,
+					new String[] { rawContactId + "", Event.CONTENT_ITEM_TYPE }).build());
+		} else if (TextUtils.isEmpty(existingC.getDateOfBirth()) && !TextUtils.isEmpty(newC.getDateOfBirth())) {
+			l.d("Add date of birth " + " (" + newC.getDateOfBirth() + ")");
+			ContentValues cv = new ContentValues();
+			cv.put(Event.START_DATE, newC.getDateOfBirth());
+			cv.put(Event.TYPE, Event.TYPE_BIRTHDAY);
+			cv.put(Event.MIMETYPE, Event.CONTENT_ITEM_TYPE);
+			Builder insertOp = createInsert(rawContactId, cv);
+			ops.add(insertOp.build());
+		} else if (existingC.getDateOfBirth() != null && !existingC.getDateOfBirth().equals(newC.getDateOfBirth())) {
+			l.d("Update date of birth " + " (" + existingC.getDateOfBirth() + " => " + newC.getDateOfBirth() + "/" + ")");
+			Builder updateOp = ContentProviderOperation.newUpdate(addCallerIsSyncAdapterFlag(Data.CONTENT_URI)).withSelection(selection,
+					new String[] { rawContactId + "", Event.CONTENT_ITEM_TYPE }).withValue(Event.START_DATE, newC.getDateOfBirth());
 			ops.add(updateOp.build());
 		}
 	}

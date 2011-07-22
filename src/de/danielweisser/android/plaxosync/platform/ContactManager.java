@@ -267,6 +267,7 @@ public class ContactManager {
 		contactMerger.updateURL(Website.TYPE_PROFILE);
 
 		contactMerger.updatePicture();
+		contactMerger.updateBirthday();
 		contactMerger.updateCompanyInformation();
 
 		contactMerger.updateAddress(StructuredPostal.TYPE_WORK);
