@@ -11,6 +11,9 @@ Testclient
 * http://www.plaxo.com/pdata/testClient
 
 Changelog
+0.4.2
+* Fixes an Exception for not complete contacts
+
 0.4.1
 * Changed URL from https to http (fixes the lacking peer certificate error)
 

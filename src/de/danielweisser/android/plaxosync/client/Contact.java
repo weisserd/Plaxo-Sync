@@ -258,6 +258,9 @@ public class Contact {
 		c.setID(entry.getString("id"));
 
 		JSONObject jsonName = entry.getObject("name");
+		if (jsonName == null) {
+			return null;
+		}
 		c.setFirstName(jsonName.getString("givenName"));
 		c.setLastName(jsonName.getString("familyName"));
 		
