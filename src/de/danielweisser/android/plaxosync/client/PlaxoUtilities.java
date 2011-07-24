@@ -76,7 +76,7 @@ public class PlaxoUtilities {
 				}
 			});
 			httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(username, password));
-			HttpGet httpget = new HttpGet("https://www.plaxo.com/pdata/contacts/@me/@all?count=1");
+			HttpGet httpget = new HttpGet("http://www.plaxo.com/pdata/contacts/@me/@all?count=1");
 			HttpResponse response = httpclient.execute(httpget);
 			HttpEntity entity = response.getEntity();
 
@@ -182,7 +182,7 @@ public class PlaxoUtilities {
 		try {
 			httpclient = getPlaxoConnection(username, password);
 			if (httpclient != null) {
-				HttpGet httpget = new HttpGet("https://www.plaxo.com/pdata/contacts/@me/@all");
+				HttpGet httpget = new HttpGet("http://www.plaxo.com/pdata/contacts/@me/@all");
 				HttpResponse response = httpclient.execute(httpget);
 				HttpEntity entity = response.getEntity();
 
