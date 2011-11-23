@@ -251,7 +251,7 @@ public class Contact {
 	 * @return user The new instance of a contact created from the JSON data.
 	 */
 	@SuppressWarnings("unchecked")
-	public static Contact valueOf(org.async.json.JSONObject entry) {
+	public static Contact valueOf(JSONObject entry) {
 		Contact c = new Contact();
 
 		// Name

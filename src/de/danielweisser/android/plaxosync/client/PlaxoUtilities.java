@@ -253,7 +253,7 @@ public class PlaxoUtilities {
 		File dir = new File(sdCard.getAbsolutePath() + Constants.SDCARD_FOLDER);
 		dir.mkdirs();
 		File jsonFile = new File(dir, "plaxosync.json");
-		BufferedWriter f = new BufferedWriter(new FileWriter(new File(dir, "plaxosync.json")));
+		BufferedWriter f = new BufferedWriter(new FileWriter(jsonFile));
 		String inputLine;
 		while ((inputLine = in.readLine()) != null) {
 			f.write(inputLine + "\n");

@@ -13,7 +13,7 @@
    version="1.1"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    sodipodi:docname="icon.svg"
-   inkscape:version="0.48.1 r9760"
+   inkscape:version="0.48.2 r9819"
    sodipodi:version="0.32"
    id="svg1256"
    height="48px"
@@ -273,7 +273,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
         <dc:date />
         <dc:creator>
           <cc:Agent>
@@ -376,13 +376,5 @@
        d="M 9.8751008,3.3336831 C 8.1912014,3.3336831 7.5384236,4.0658459 7.4581673,5.887831 L 6.1592633,35.777198 C 7.0925916,34.170451 8.5988591,33.594437 11.011665,33.594437 L 40.963081,33.594437 L 38.137179,3.7573631 C 38.114727,3.5203092 37.793961,3.3336831 37.551434,3.3336831 L 9.8751008,3.3336831 z "
        id="path2104"
        sodipodi:nodetypes="cccscssc" />
-    <image
-       sodipodi:absref="/home/daniel/TODO/Syncs/Sources/Plaxo-Sync/doc/footerlogo.gif"
-       xlink:href="footerlogo.gif"
-       width="23.20101"
-       height="23.20101"
-       id="image2826"
-       x="12.6179"
-       y="7.1429515" />
   </g>
 </svg>

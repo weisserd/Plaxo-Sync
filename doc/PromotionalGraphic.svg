@@ -14,7 +14,7 @@
    height="120"
    id="svg3853"
    version="1.1"
-   inkscape:version="0.48.1 r9760"
+   inkscape:version="0.48.2 r9819"
    sodipodi:docname="PromotionalGraphic.svg"
    inkscape:export-filename="/home/daniel/TODO/Syncs/Sources/Plaxo-Sync/doc/PromotionalGraphic.png"
    inkscape:export-xdpi="90"
@@ -14283,7 +14283,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -18682,12 +18682,5 @@
            style="fill:#ffffff;fill-opacity:1;stroke:none;filter:url(#filter4877)" />
       </g>
     </g>
-    <image
-       y="656.2962"
-       x="375.8989"
-       id="image5702"
-       xlink:href="file:///home/daniel/TODO/Syncs/Sources/Plaxo-Sync/doc/footerlogo.gif"
-       height="34.824024"
-       width="34.824024" />
   </g>
 </svg>
