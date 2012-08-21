@@ -24,10 +24,9 @@ import org.apache.http.client.RedirectHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HttpContext;
-import org.async.json.JSONArray;
-import org.async.json.JSONObject;
-import org.async.json.in.JSONParser;
-import org.async.json.in.JSONReader;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.Environment;
@@ -221,21 +220,26 @@ public class PlaxoUtilities {
 	 * @throws IOException
 	 */
 	private static void parseJSON(final ArrayList<Contact> friendList, File jsonFile) throws FileNotFoundException, IOException {
+		StringBuilder builder = new StringBuilder();
 		BufferedReader inJson = new BufferedReader(new FileReader(jsonFile));
-
-		JSONParser jp = new JSONParser();
-		JSONReader jr = new JSONReader(inJson);
-		JSONObject jo = jp.parse(jr);
-
-		@SuppressWarnings("unchecked")
-		JSONArray<JSONObject> entries = (JSONArray<JSONObject>) jo.getArray("entry");
-		for (JSONObject entry : entries) {
-			Contact u = Contact.valueOf(entry);
-			if (u != null && u.getFirstName() != null && u.getLastName() != null) {
-				friendList.add(u);
-			}
+		String line;
+		while ((line = inJson.readLine()) != null) {
+			builder.append(line);
 		}
-		jr.close();
+
+		try {
+			JSONObject allData = new JSONObject(builder.toString());
+			JSONArray jsonArray = allData.getJSONArray("entry");
+			for (int i = 0; i < jsonArray.length(); i++) {
+				Contact u = Contact.valueOf(jsonArray.getJSONObject(i));
+				if (u != null && u.getFirstName() != null && u.getLastName() != null) {
+					friendList.add(u);
+				}
+			}
+		} catch (JSONException e) {
+			Log.e(TAG, e.getMessage(), e);
+		}
+
 		inJson.close();
 	}
 

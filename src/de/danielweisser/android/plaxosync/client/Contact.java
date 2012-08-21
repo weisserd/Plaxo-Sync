@@ -11,8 +11,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.async.json.JSONArray;
-import org.async.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -249,99 +250,105 @@ public class Contact {
 	 * @param entry
 	 * 
 	 * @return user The new instance of a contact created from the JSON data.
+	 * @throws JSONException
+	 *             Is thrown, when a problem during parsing occurs
 	 */
-	@SuppressWarnings("unchecked")
-	public static Contact valueOf(JSONObject entry) {
+	public static Contact valueOf(JSONObject entry) throws JSONException {
 		Contact c = new Contact();
 
 		// Name
 		c.setID(entry.getString("id"));
 
-		JSONObject jsonName = entry.getObject("name");
+		JSONObject jsonName = entry.getJSONObject("name");
 		if (jsonName == null) {
 			return null;
 		}
 		c.setFirstName(jsonName.getString("givenName"));
 		c.setLastName(jsonName.getString("familyName"));
-		
+
 		// Date of birth
-		if (entry.contains("birthday")) {
+		if (entry.has("birthday")) {
 			c.setDateOfBirth(entry.getString("birthday"));
 		}
 
 		// Photo
-		if (entry.contains("photos")) {
-			JSONArray<JSONObject> jsonPictureArray = (JSONArray<JSONObject>) entry.getArray("photos");
-			for (JSONObject jsonPicture : jsonPictureArray) {
-				if (jsonPicture.contains("type") && jsonPicture.getString("type").equals("home")) {
+		if (entry.has("photos")) {
+			JSONArray jsonPictureArray = (JSONArray) entry.getJSONArray("photos");
+			for (int i = 0; i < jsonPictureArray.length(); i++) {
+				JSONObject jsonPicture = jsonPictureArray.getJSONObject(i);
+				if (jsonPicture.has("type") && jsonPicture.getString("type").equals("home")) {
 					c.setImageURL(jsonPicture.getString("value"));
 				}
 			}
 		}
 
 		// E-Mails
-		if (entry.contains("emails")) {
-			JSONArray<JSONObject> jsonMailArray = (JSONArray<JSONObject>) entry.getArray("emails");
-			for (JSONObject jsonMail : jsonMailArray) {
-				if (jsonMail.contains("type") && jsonMail.getString("type").equals("work")) {
+		if (entry.has("emails")) {
+			JSONArray jsonMailArray = (JSONArray) entry.getJSONArray("emails");
+			for (int i = 0; i < jsonMailArray.length(); i++) {
+				JSONObject jsonMail = jsonMailArray.getJSONObject(i);
+				if (jsonMail.has("type") && jsonMail.getString("type").equals("work")) {
 					c.setWorkEmail(jsonMail.getString("value"));
-				} else if (jsonMail.contains("type") && jsonMail.getString("type").equals("home")) {
+				} else if (jsonMail.has("type") && jsonMail.getString("type").equals("home")) {
 					c.setHomeEmail(jsonMail.getString("value"));
 				}
 			}
 		}
 
 		// URLs
-		if (entry.contains("urls")) {
-			JSONArray<JSONObject> jsonURLArray = (JSONArray<JSONObject>) entry.getArray("urls");
-			for (JSONObject jsonURL : jsonURLArray) {
-				if (jsonURL.contains("type") && jsonURL.getString("type").equals("work")) {
+		if (entry.has("urls")) {
+			JSONArray jsonURLArray = (JSONArray) entry.getJSONArray("urls");
+			for (int i = 0; i < jsonURLArray.length(); i++) {
+				JSONObject jsonURL = jsonURLArray.getJSONObject(i);
+				if (jsonURL.has("type") && jsonURL.getString("type").equals("work")) {
 					c.setWorkURL(jsonURL.getString("value"));
-				} else if (jsonURL.contains("type") && jsonURL.getString("type").equals("home")) {
+				} else if (jsonURL.has("type") && jsonURL.getString("type").equals("home")) {
 					c.setHomeURL(jsonURL.getString("value"));
 				}
 			}
 		}
 
 		// Phone numbers
-		if (entry.contains("phoneNumbers")) {
-			JSONArray<JSONObject> jsonPhoneArray = (JSONArray<JSONObject>) entry.getArray("phoneNumbers");
-			for (JSONObject jsonPhone : jsonPhoneArray) {
-				if (jsonPhone.contains("type") && jsonPhone.getString("type").equals("work")) {
+		if (entry.has("phoneNumbers")) {
+			JSONArray jsonPhoneArray = (JSONArray) entry.getJSONArray("phoneNumbers");
+			for (int i = 0; i < jsonPhoneArray.length(); i++) {
+				JSONObject jsonPhone = jsonPhoneArray.getJSONObject(i);
+				if (jsonPhone.has("type") && jsonPhone.getString("type").equals("work")) {
 					c.setWorkPhone(jsonPhone.getString("value"));
-				} else if (jsonPhone.contains("type") && jsonPhone.getString("type").equals("home")) {
+				} else if (jsonPhone.has("type") && jsonPhone.getString("type").equals("home")) {
 					c.setHomePhone(jsonPhone.getString("value"));
-				} else if (jsonPhone.contains("type") && jsonPhone.getString("type").equals("fax")) {
+				} else if (jsonPhone.has("type") && jsonPhone.getString("type").equals("fax")) {
 					c.setWorkFax(jsonPhone.getString("value"));
-				} else if (jsonPhone.contains("type") && jsonPhone.getString("type").equals("mobile")) {
+				} else if (jsonPhone.has("type") && jsonPhone.getString("type").equals("mobile")) {
 					c.setCellWorkPhone(jsonPhone.getString("value"));
 				}
 			}
 		}
 
 		// Company
-		if (entry.contains("organizations")) {
-			JSONArray<JSONObject> jsonOrganizationArray = (JSONArray<JSONObject>) entry.getArray("organizations");
-			JSONObject jsonOrganization = jsonOrganizationArray.getObject(0);
-			if (jsonOrganization.contains("name")) {
+		if (entry.has("organizations")) {
+			JSONArray jsonOrganizationArray = (JSONArray) entry.getJSONArray("organizations");
+			JSONObject jsonOrganization = jsonOrganizationArray.getJSONObject(0);
+			if (jsonOrganization.has("name")) {
 				c.setCompany(jsonOrganization.getString("name"));
 			}
-			if (jsonOrganization.contains("title")) {
+			if (jsonOrganization.has("title")) {
 				c.setTitle(jsonOrganization.getString("title"));
 			}
 		}
 
 		// Addresses
-		if (entry.contains("addresses")) {
-			JSONArray<JSONObject> jsonAddressArray = (JSONArray<JSONObject>) entry.getArray("addresses");
-			for (JSONObject jsonAddress : jsonAddressArray) {
+		if (entry.has("addresses")) {
+			JSONArray jsonAddressArray = (JSONArray) entry.getJSONArray("addresses");
+			for (int i = 0; i < jsonAddressArray.length(); i++) {
+				JSONObject jsonAddress = jsonAddressArray.getJSONObject(i);
 				Address a = new Address();
-				a.setStreet(jsonAddress.contains("streetAddress") ? jsonAddress.getString("streetAddress") : "");
-				a.setCity(jsonAddress.contains("locality") ? jsonAddress.getString("locality") : "");
-				a.setZip(jsonAddress.contains("postalCode") ? jsonAddress.getString("postalCode") : "");
-				a.setState(jsonAddress.contains("region") ? jsonAddress.getString("region") : "");
-				a.setCountry(jsonAddress.contains("country") ? jsonAddress.getString("country") : "");
-				if (jsonAddress.contains("type")) {
+				a.setStreet(jsonAddress.has("streetAddress") ? jsonAddress.getString("streetAddress") : "");
+				a.setCity(jsonAddress.has("locality") ? jsonAddress.getString("locality") : "");
+				a.setZip(jsonAddress.has("postalCode") ? jsonAddress.getString("postalCode") : "");
+				a.setState(jsonAddress.has("region") ? jsonAddress.getString("region") : "");
+				a.setCountry(jsonAddress.has("country") ? jsonAddress.getString("country") : "");
+				if (jsonAddress.has("type")) {
 					if (jsonAddress.getString("type").equals("work")) {
 						c.setWorkAddress(a);
 					} else if (jsonAddress.getString("type").equals("home")) {
