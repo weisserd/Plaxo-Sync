@@ -3,6 +3,7 @@
 ## 1.0 ()
 * Updated art work
 * Updates for Android 4
+* Change logging infrastructure (fixes #4)
 
 ## 0.5.0 (2011-11-23)
 * Updated art work

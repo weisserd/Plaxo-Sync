@@ -39,9 +39,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 	@Override
 	public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
-		Logger l = new Logger();
-		l.startLogging();
-		l.d("Start the sync");
 		Log.d(TAG, "Start the sync.");
 		List<Contact> users = new ArrayList<Contact>();
 		String authtoken = null;
@@ -52,18 +49,15 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 			if (users == null) {
 				syncResult.stats.numIoExceptions++;
-				l.stopLogging();
 				return;
 			}
 			// update the last synced date.
 			mLastUpdated = new Date();
 			// update platform contacts.
 			Log.d(TAG, "Calling contactManager's sync contacts");
-			l.d("Calling contactManager's sync contacts");
-			ContactManager cm = new ContactManager(l);
+			ContactManager cm = new ContactManager();
 			cm.syncContacts(mContext, account.name, users, syncResult);
 			// ContactManager.syncContacts(mContext, account.name, users, syncResult, l);
-			l.stopLogging();
 		} catch (final AuthenticatorException e) {
 			syncResult.stats.numParseExceptions++;
 			Log.e(TAG, "AuthenticatorException", e);
