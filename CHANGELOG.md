@@ -1,17 +1,8 @@
-TODOs
+# Changelog
 
-==
+0.5.0
+* Updated art work
 
-Ideas
-* App which redirects to Settings	
-* More tests: http://mobile.tutsplus.com/tutorials/android/android-sdk-junit-testing/	
-* Homepage
-* Download in multiple pieces?
-
-Testclient
-* http://www.plaxo.com/pdata/testClient
-
-Changelog
 0.4.3
 * Removed async JSON Parser
 
