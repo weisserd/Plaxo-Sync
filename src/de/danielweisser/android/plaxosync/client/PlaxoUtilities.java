@@ -1,11 +1,7 @@
 package de.danielweisser.android.plaxosync.client;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,10 +25,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
-import de.danielweisser.android.plaxosync.Constants;
 import de.danielweisser.android.plaxosync.authenticator.PlaxoAuthenticatorActivity;
 
 /**
@@ -187,10 +181,8 @@ public class PlaxoUtilities {
 
 				if (entity != null) {
 					InputStream contentStream = entity.getContent();
-					File jsonFile = writedataToSD(contentStream);
+					parseJSON(friendList, contentStream);
 					entity.consumeContent();
-
-					parseJSON(friendList, jsonFile);
 					Log.d(TAG, "Number of contacts: " + friendList.size());
 				}
 			}
@@ -210,18 +202,19 @@ public class PlaxoUtilities {
 	}
 
 	/**
-	 * Parses the JSON file from the SD card asynchronously.
+	 * Parses the JSON.
 	 * 
 	 * @param friendList
 	 *            List with contacts
-	 * @param jsonFile
-	 *            JSON file on SD card
+	 * @param contentStream
+	 *            JSON from HTTP
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	private static void parseJSON(final ArrayList<Contact> friendList, File jsonFile) throws FileNotFoundException, IOException {
+	private static void parseJSON(final ArrayList<Contact> friendList, InputStream contentStream) throws FileNotFoundException, IOException {
+		Log.d(TAG, "Trying to parse the JSON");
 		StringBuilder builder = new StringBuilder();
-		BufferedReader inJson = new BufferedReader(new FileReader(jsonFile));
+		BufferedReader inJson = new BufferedReader(new InputStreamReader(contentStream));
 		String line;
 		while ((line = inJson.readLine()) != null) {
 			builder.append(line);
@@ -241,29 +234,5 @@ public class PlaxoUtilities {
 		}
 
 		inJson.close();
-	}
-
-	/**
-	 * Obtains the raw data and writes it to the SD card.
-	 * 
-	 * @param contentStream
-	 *            ContentStream to read from (HTTP access of Plaxo)
-	 * @return File handle to the written JSON file on the SD card
-	 * @throws IOException
-	 */
-	private static File writedataToSD(InputStream contentStream) throws IOException {
-		BufferedReader in = new BufferedReader(new InputStreamReader(contentStream));
-		File sdCard = Environment.getExternalStorageDirectory();
-		File dir = new File(sdCard.getAbsolutePath() + Constants.SDCARD_FOLDER);
-		dir.mkdirs();
-		File jsonFile = new File(dir, "plaxosync.json");
-		BufferedWriter f = new BufferedWriter(new FileWriter(jsonFile));
-		String inputLine;
-		while ((inputLine = in.readLine()) != null) {
-			f.write(inputLine + "\n");
-		}
-		f.close();
-		in.close();
-		return jsonFile;
 	}
 }
