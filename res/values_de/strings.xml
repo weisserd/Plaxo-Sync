@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="label">Plaxo</string>
+	<string name="app_name">Daniel\'s Plaxo Sync</string>
+
+	<!-- AuthenticatorActivity -->
+	<string name="login_activity_username_label">Benutzername</string>
+	<string name="login_activity_password_label">Passwort</string>
+	<string name="login_activity_done_button">Fertig</string>
+
+	<string name="ui_activity_authenticating">Authentifizerung\u2026</string>
+
+	<!-- Title string for Login activity-->
+	<string name="ui_activity_title">Plaxo Login Daten</string>
+</resources>
