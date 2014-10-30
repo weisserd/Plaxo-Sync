@@ -19,10 +19,6 @@ import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.os.RemoteException;
 import android.provider.ContactsContract;
-import android.provider.ContactsContract.Data;
-import android.provider.ContactsContract.Groups;
-import android.provider.ContactsContract.RawContacts;
-import android.provider.ContactsContract.Settings;
 import android.provider.ContactsContract.CommonDataKinds.Email;
 import android.provider.ContactsContract.CommonDataKinds.Organization;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
@@ -30,22 +26,20 @@ import android.provider.ContactsContract.CommonDataKinds.Photo;
 import android.provider.ContactsContract.CommonDataKinds.StructuredName;
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 import android.provider.ContactsContract.CommonDataKinds.Website;
+import android.provider.ContactsContract.Data;
+import android.provider.ContactsContract.Groups;
+import android.provider.ContactsContract.RawContacts;
+import android.provider.ContactsContract.Settings;
 import android.util.Log;
 import de.danielweisser.android.plaxosync.Constants;
 import de.danielweisser.android.plaxosync.client.Address;
 import de.danielweisser.android.plaxosync.client.Contact;
-import de.danielweisser.android.plaxosync.syncadapter.Logger;
 
 /**
  * Class for managing contacts sync related operations
  */
 public class ContactManager {
 	private static final String TAG = "ContactManager";
-	private Logger l;
-
-	public ContactManager(Logger l) {
-		this.l = l;
-	}
 
 	/**
 	 * Synchronize raw contacts
@@ -68,13 +62,11 @@ public class ContactManager {
 			if (contactsOnPhone.containsKey(contact.getID())) {
 				Long contactId = contactsOnPhone.get(contact.getID());
 				Log.d(TAG, "Update contact: " + contact.getID());
-				l.d("Update contact: " + contact.getID() + " " + contact.getFirstName() + " " + contact.getLastName() + " (" + contactId + ")");
 				updateContact(resolver, contactId, contact);
 				syncResult.stats.numUpdates++;
 				contactsOnPhone.remove(contact.getID());
 			} else {
 				Log.d(TAG, "Add contact: " + contact.getFirstName() + " " + contact.getLastName());
-				l.d("Add contact: " + contact.getFirstName() + " " + contact.getLastName());
 				addContact(resolver, accountName, contact);
 				syncResult.stats.numInserts++;
 			}
@@ -82,8 +74,7 @@ public class ContactManager {
 
 		// Delete contacts
 		for (Entry<String, Long> contact : contactsOnPhone.entrySet()) {
-			Log.d(TAG, "Delete contact: " + contact.getKey());
-			l.d("Delete contact: " + contact.getKey() + "(" + contact.getValue() + ")");
+			Log.d(TAG, "Delete contact: " + contact.getKey() + "(" + contact.getValue() + ")");
 			deleteContact(resolver, contact.getValue());
 			syncResult.stats.numDeletes++;
 		}
@@ -243,14 +234,14 @@ public class ContactManager {
 			ContentProviderResult[] res = resolver.applyBatch(ContactsContract.AUTHORITY, ops);
 			// The first insert is the one generating the ID for this contact
 			long id = ContentUris.parseId(res[0].uri);
-			l.d("The new contact has id: " + id);
+			Log.d(TAG, "The new contact has id: " + id);
 		} catch (Exception e) {
 			Log.e(TAG, "Cannot create contact ", e);
 		}
 	}
 
 	private void prepareFields(long rawContactId, Contact newC, Contact existingC, ArrayList<ContentProviderOperation> ops, boolean isNew) {
-		ContactMerger contactMerger = new ContactMerger(rawContactId, newC, existingC, ops, l);
+		ContactMerger contactMerger = new ContactMerger(rawContactId, newC, existingC, ops);
 		contactMerger.updateName();
 		contactMerger.updateMail(Email.TYPE_WORK);
 		contactMerger.updateMail(Email.TYPE_HOME);

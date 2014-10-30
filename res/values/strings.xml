@@ -4,7 +4,6 @@
 	<string name="app_name">Daniel\'s Plaxo Sync</string>
 
 	<!-- AuthenticatorActivity -->
-	<skip />
 	<string name="login_activity_username_label">Username</string>
 	<string name="login_activity_password_label">Password</string>
 	<string name="login_activity_done_button">Done</string>
