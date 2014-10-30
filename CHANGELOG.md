@@ -1,12 +1,11 @@
 # Changelog
 
-## 1.0 (2014-08-??)
+## 1.0 (2014-10-30)
 * Updated art work (including high resolution)
 * Updates for Android 4
 * Change logging infrastructure (fixes #4)
 * Removed unnecessary rights
 * Smaller bugfixes
-* Added an own icon and activity to add a new account
 
 ## 0.5.0 (2011-11-23)
 * Updated art work
