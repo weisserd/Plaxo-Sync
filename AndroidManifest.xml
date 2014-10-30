@@ -36,14 +36,12 @@
 		<activity
 			android:name="de.danielweisser.android.plaxosync.authenticator.PlaxoAuthenticatorActivity"
 			android:label="@string/app_name" android:excludeFromRecents="true">
+			<!-- 
 			<intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
-			<!--
-				No intent-filter here! This activity is only ever launched by
-				someone who explicitly knows the class name
-			-->
+             -->
 		</activity>
 	</application>
 </manifest> 
